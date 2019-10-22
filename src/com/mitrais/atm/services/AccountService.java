@@ -39,13 +39,18 @@ public class AccountService implements IAccountService {
      */
     @Override
     public List<AccountModel> getAccountList() {
-        List<List<String>> lines = CsvHelper.readFromCSV(this.accountCsv);
-        
         List<AccountModel> accounts = new ArrayList<>();
+        
+        List<List<String>> lines = CsvHelper.readFromCSV(this.accountCsv);
         
         lines.stream().map((line) -> createAccountObject(line)).forEach((account) -> {
             accounts.add(account);
         });
+        
+        for(List<String> line : lines){
+            AccountModel transaction = createAccountObject(line);
+            
+        }
 
         return accounts;
     }

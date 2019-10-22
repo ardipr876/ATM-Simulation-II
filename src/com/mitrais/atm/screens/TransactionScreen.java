@@ -34,18 +34,20 @@ public class TransactionScreen {
     */
     public void transaction(AccountModel account, List<AccountModel> database) {
         WithdrawScreen withdrawScreen = WithdrawScreen.getInstance();
-        
         FundTransferScreen fundTransferScreen = FundTransferScreen.getInstance();
+        TransactionHistoryScreen historyScreen = TransactionHistoryScreen.getInstance();
                 
         boolean repeat = true;
         
         do {
             System.out.println("---------------------------------------------------------");
-            System.out.println(String.format("Welcome %s on ATM Transaction Screen", account.getName()));
+            System.out.println(String.format("Welcome %s on ATM Transaction Screen", 
+                    account.getName()));
             System.out.println("1. Withdraw");
             System.out.println("2. Fund Transfer");
-            System.out.println("3. Exit");
-            System.out.print("Please choose option[3]: ");
+            System.out.println("3. Transaction History");
+            System.out.println("4. Exit");
+            System.out.print("Please choose option[4]: ");
             
             Scanner scannerOption = new Scanner(System. in);
             
@@ -65,12 +67,13 @@ public class TransactionScreen {
                 if(ScreenEnum.LOGIN.name().equals(goToScreen)) {
                     repeat = false;
                 }
-            } else if("4".equals(option)) {
-                float balance = account.getBalance();
+            } else if("3".equals(option)) {
+                goToScreen = historyScreen.history(account);
                 
-                System.out.println("---------------------------------------------------------");
-                System.out.println("Your Balance : $" + balance);
-            } else if("3".equals(option) || option == null || option.isEmpty()) {
+                if(ScreenEnum.LOGIN.name().equals(goToScreen)) {
+                    repeat = false;
+                }
+            } else if("4".equals(option) || option == null || option.isEmpty()) {
                 repeat = false;
             }
             

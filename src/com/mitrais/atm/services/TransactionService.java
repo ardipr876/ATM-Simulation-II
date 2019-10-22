@@ -1,20 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mitrais.atm.services;
 
+import com.mitrais.atm.helpers.CsvHelper;
 import com.mitrais.atm.models.AccountModel;
 import com.mitrais.atm.models.TransactionModel;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Transaction Service
@@ -144,5 +144,59 @@ public class TransactionService {
             
             return true;
         }
+    }
+    
+    /**
+     * Get Transaction History
+     * @return List of TransactionModel
+     */
+    public List<TransactionModel> getTransactionHistory() {
+        List<TransactionModel> transactionHistory = new ArrayList<>();
+        
+        // get lines of transaction from CSV file
+        List<List<String>> lines = CsvHelper.readFromCSV(this.transactionCsv);
+        
+        // create Transaction object and add it to transaction history
+        lines.stream().map((line) -> createTransactionObject(line)).forEach((transaction) -> {
+            transactionHistory.add(transaction);
+        });
+        
+        // sort transaction history by date descending
+        List<TransactionModel> sortTransactionDateDesc = transactionHistory.stream()
+            .sorted(Comparator.comparing(TransactionModel::getCreateDate).reversed())
+            .collect(Collectors.toList());
+
+        // get top 10 transaction data
+        List<TransactionModel> transaction = sortTransactionDateDesc.stream()
+                .skip(0).limit(10)
+                .collect(Collectors.toCollection(ArrayList::new));
+        
+        return transaction;
+    }
+    
+    /**
+     * Create Transaction object from CSV line
+     * @param metadata
+     * @return TransactionModel
+     */
+    private TransactionModel createTransactionObject(List<String> metadata) {
+        String accountNumber = metadata.get(0);
+        
+        String notes = metadata.get(1);
+        
+        String type = metadata.get(2);
+        
+        float amount = Float.parseFloat(metadata.get(3));
+        
+        Date createDate = new Date();
+        try {
+            createDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(metadata.get(4));
+        } catch (ParseException ex) {
+            System.out.println(TransactionService.class.getName() + ": " + ex);
+        }
+        
+        float balance = Float.parseFloat(metadata.get(5));
+        
+        return new TransactionModel(accountNumber, notes, type, amount, createDate, balance);
     }
 }
