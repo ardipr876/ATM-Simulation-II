@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -47,7 +48,7 @@ public class TransactionService {
                 System.out.println("Empty");
             }
                 
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             
             String strDate = dateFormat.format(transaction.getCreateDate());
 
@@ -150,7 +151,7 @@ public class TransactionService {
      * Get Transaction History
      * @return List of TransactionModel
      */
-    public List<TransactionModel> getTransactionHistory() {
+    public List<TransactionModel> getTransactionHistory(String accountNumber) {
         List<TransactionModel> transactionHistory = new ArrayList<>();
         
         // get lines of transaction from CSV file
@@ -161,17 +162,24 @@ public class TransactionService {
             transactionHistory.add(transaction);
         });
         
+        // predicate for filtering data by account number
+        Predicate<TransactionModel> predicate = (data) -> 
+                data.getAccountNumber().equals(accountNumber);
+        
         // sort transaction history by date descending
         List<TransactionModel> sortTransactionDateDesc = transactionHistory.stream()
-            .sorted(Comparator.comparing(TransactionModel::getCreateDate).reversed())
-            .collect(Collectors.toList());
+                .filter(predicate)
+                .sorted(Comparator.comparing(TransactionModel::getCreateDate).reversed())
+                .collect(Collectors.toList());
 
         // get top 10 transaction data
         List<TransactionModel> transaction = sortTransactionDateDesc.stream()
                 .skip(0).limit(10)
                 .collect(Collectors.toCollection(ArrayList::new));
         
-        return transaction;
+        return transaction.stream()
+                .sorted(Comparator.comparing(TransactionModel::getCreateDate))
+                .collect(Collectors.toList());
     }
     
     /**
