@@ -3,6 +3,7 @@ package com.mitrais.atm.services;
 import com.mitrais.atm.helpers.CsvHelper;
 import com.mitrais.atm.models.AccountModel;
 import com.mitrais.atm.models.TransactionModel;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -13,8 +14,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -23,12 +22,13 @@ import java.util.stream.Collectors;
  */
 public class TransactionService {
     private static TransactionService INSTANCE;
-    private final String userDir = System.getProperty("user.dir");
-    private final String transactionCsv = this.userDir + "\\File\\transaction.csv";
+    //private final String appDir = System.getProperty("user.dir");
+    private final String transactionCsv;
     private final AccountService accountService = AccountService.getInstance();
     
     private TransactionService(){
-        
+        this.transactionCsv = CsvHelper.getPropValue("directoryCsv") + 
+                File.separator + "transaction.csv";
     }
     
     /**
@@ -42,30 +42,56 @@ public class TransactionService {
         return INSTANCE;
     }
     
+    /**
+     * Append Transaction Data to transaction.CSV
+     * @param transaction 
+     */
     private void appendTransactionData(TransactionModel transaction) {
-        try (FileWriter pw = new FileWriter(this.transactionCsv, true)) {
-            if (transaction == null) {
-                System.out.println("Empty");
+        try {
+            File file = new File(this.transactionCsv);
+            FileWriter fw;
+            
+            if (file.exists())
+            {
+                fw = new FileWriter(file, true); //if file exists append to file. Works fine.
             }
+            else
+            {
+                file.createNewFile();
+                fw = new FileWriter(file);
                 
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                fw.append("Account Number");
+                fw.append(",");
+                fw.append("Notes");
+                fw.append(",");
+                fw.append("Type");
+                fw.append(",");
+                fw.append("Amount");
+                fw.append(",");
+                fw.append("Create Date");
+                fw.append(",");
+                fw.append("Balance");
+                fw.append("\n");
+            }
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
             
             String strDate = dateFormat.format(transaction.getCreateDate());
 
-            pw.append(transaction.getAccountNumber());
-            pw.append(",");
-            pw.append(transaction.getNotes());
-            pw.append(",");
-            pw.append(transaction.getType());
-            pw.append(",");
-            pw.append(Float.toString(transaction.getAmount()));
-            pw.append(",");
-            pw.append(strDate);
-            pw.append(",");
-            pw.append(Float.toString(transaction.getBalance()));
-            pw.append("\n");
+            fw.append(transaction.getAccountNumber());
+            fw.append(",");
+            fw.append(transaction.getNotes());
+            fw.append(",");
+            fw.append(transaction.getType());
+            fw.append(",");
+            fw.append(Float.toString(transaction.getAmount()));
+            fw.append(",");
+            fw.append(strDate);
+            fw.append(",");
+            fw.append(Float.toString(transaction.getBalance()));
+            fw.append("\n");
 
-            pw.flush();
+            fw.flush();
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -149,6 +175,7 @@ public class TransactionService {
     
     /**
      * Get Transaction History
+     * @param accountNumber
      * @return List of TransactionModel
      */
     public List<TransactionModel> getTransactionHistory(String accountNumber) {
@@ -198,7 +225,7 @@ public class TransactionService {
         
         Date createDate = new Date();
         try {
-            createDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(metadata.get(4));
+            createDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").parse(metadata.get(4));
         } catch (ParseException ex) {
             System.out.println(TransactionService.class.getName() + ": " + ex);
         }

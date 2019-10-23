@@ -1,11 +1,16 @@
 package com.mitrais.atm.helpers;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * CSV Helper
@@ -42,5 +47,59 @@ public class CsvHelper {
         }
 
         return data;
+    }
+    
+    /**
+     * Get Property Value
+     * @param type
+     * @return 
+     */
+    public static String getPropValue(String type) {
+        String result = "";
+        
+        String propFileName = "config.properties";
+        
+        try (InputStream input = CsvHelper.class.getClassLoader().getResourceAsStream(propFileName)) {
+
+            Properties prop = new Properties();
+
+            if (input == null) {
+                System.out.println("Sorry, unable to find config.properties");
+            }
+
+            //load a properties file from class path, inside static method
+            prop.load(input);
+
+            result = prop.getProperty(type);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Set Property Value
+     * @param type
+     * @param value 
+     */
+    public static void setPropValue(Map<String, String> map, String propFileName){
+        try (OutputStream output = new FileOutputStream(propFileName)) {
+
+            Properties prop = new Properties();
+
+            // set the properties value
+            for(Map.Entry<String, String> entry : map.entrySet()) {
+                prop.setProperty(entry.getKey(), entry.getValue());
+            }
+            
+            // save properties to project root folder
+            prop.store(output, null);
+
+            System.out.println(prop);
+
+        } catch (IOException io) {
+            io.printStackTrace();
+        }
     }
 }

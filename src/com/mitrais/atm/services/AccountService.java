@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Account Service
@@ -15,10 +16,11 @@ import java.util.List;
  */
 public class AccountService implements IAccountService {
     private static AccountService INSTANCE;
-    private final String userDir = System.getProperty("user.dir");
-    private final String accountCsv = this.userDir + "\\File\\account.csv";
+    private final String accountCsv = CsvHelper.getPropValue("directoryCsv") + "\\account.csv";
+    //private final String appDir = System.getProperty("user.dir");
+    //this.appDir + "\\File\\account.csv";
     
-    private AccountService(){
+    private AccountService() {
         
     }
     
@@ -35,26 +37,37 @@ public class AccountService implements IAccountService {
     
     /**
      * get account list from CSV file
+     * @param path
      * @return List Account 
      */
     @Override
-    public List<AccountModel> getAccountList() {
+    public List<AccountModel> getAccountList(String path) {
         List<AccountModel> accounts = new ArrayList<>();
         
-        List<List<String>> lines = CsvHelper.readFromCSV(this.accountCsv);
+        if (path.isEmpty()) {
+            path = this.accountCsv;
+        } else {
+            
+        }
+        
+        List<List<String>> lines = CsvHelper.readFromCSV(path);
         
         lines.stream().map((line) -> createAccountObject(line)).forEach((account) -> {
             accounts.add(account);
         });
         
-        for(List<String> line : lines){
-            AccountModel transaction = createAccountObject(line);
-            
-        }
-
         return accounts;
     }
     
+    @Override
+    public List<AccountModel> getDuplicateAccount(List<AccountModel> accounts) {
+        return accounts.stream()
+            .collect(Collectors.groupingBy(AccountModel::getAccountNumber))
+            .entrySet().stream()
+            .filter(e->e.getValue().size() > 1)
+            .flatMap(e->e.getValue().stream())
+            .collect(Collectors.toList());
+    }
     /**
      * Create Account object from CSV line
      * @param metadata
@@ -72,6 +85,11 @@ public class AccountService implements IAccountService {
         return new AccountModel(name, accountNumber, pin, balance);
     }
     
+    /**
+     * Update Account Data
+     * @param accounts 
+     */
+    @Override
     public void updateAccountData(List<AccountModel> accounts) {
         try (FileWriter pw = new FileWriter(this.accountCsv)) {
             pw.append("Name");
@@ -107,4 +125,6 @@ public class AccountService implements IAccountService {
             ioe.printStackTrace();
         }
     }
+    
+    
 }

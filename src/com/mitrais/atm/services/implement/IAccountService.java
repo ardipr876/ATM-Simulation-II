@@ -8,7 +8,9 @@ import java.util.List;
  * @author Ardi_PR876
  */
 public interface IAccountService {
-    List<AccountModel> getAccountList();
+    List<AccountModel> getAccountList(String path);
+    List<AccountModel> getDuplicateAccount(List<AccountModel> accounts);
+    void updateAccountData(List<AccountModel> accounts);
 //    boolean deductBalance(AccountModel account, float amount);
 //    boolean fundTransfer(AccountModel account, AccountModel destination, float amount);
 }
