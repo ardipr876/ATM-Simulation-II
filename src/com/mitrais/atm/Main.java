@@ -6,12 +6,7 @@ import com.mitrais.atm.screens.ChangeFilePathScreen;
 import com.mitrais.atm.screens.TransactionScreen;
 import com.mitrais.atm.services.AccountService;
 import com.mitrais.atm.services.LoginService;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 import java.util.Scanner;
 
 /**
@@ -19,7 +14,6 @@ import java.util.Scanner;
  * @author Ardi_PR876
  */
 public class Main {
-    
     /**
      * Main Method
      * @param args 
@@ -37,8 +31,8 @@ public class Main {
             System.out.println("---------------------------------------------------------");
             System.out.println("Welcome To ATM Simulation - 2");
             System.out.println("---------------------------------------------------------");
-            System.out.println("Choose account list source");
-            System.out.println("1. Use Existing CSV File");
+            System.out.println("Choose account database");
+            System.out.println("1. Use Existing CSV File (get path on config.properties)");
             System.out.println("2. Use Your CSV File");
             System.out.println("");
             System.out.print("Your Choose (1 / 2) : ");
@@ -48,8 +42,10 @@ public class Main {
             String option = scannerOption.nextLine().trim();
             
             if ("1".equals(option)) {
+                String accountCsv = CsvHelper.getPropValue("directoryCsv") + "\\account.csv";
+                
                 System.out.println("---------------------------------------------------------");
-                List<AccountModel> database = accountService.getAccountList("");
+                List<AccountModel> database = accountService.getAccountList(accountCsv);
                 
                 AccountModel account = loginService.login(database);
                 

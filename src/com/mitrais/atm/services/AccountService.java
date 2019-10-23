@@ -1,12 +1,8 @@
 package com.mitrais.atm.services;
 
-import com.mitrais.atm.helpers.CsvHelper;
 import com.mitrais.atm.models.AccountModel;
+import com.mitrais.atm.repository.AccountRepository;
 import com.mitrais.atm.services.implement.IAccountService;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,9 +12,8 @@ import java.util.stream.Collectors;
  */
 public class AccountService implements IAccountService {
     private static AccountService INSTANCE;
-    private final String accountCsv = CsvHelper.getPropValue("directoryCsv") + "\\account.csv";
-    //private final String appDir = System.getProperty("user.dir");
-    //this.appDir + "\\File\\account.csv";
+    private final AccountRepository accountRepository = AccountRepository.getInstance();
+    //private String appDir = System.getProperty("user.dir"); //this.appDir + "\\File\\account.csv";
     
     private AccountService() {
         
@@ -42,21 +37,7 @@ public class AccountService implements IAccountService {
      */
     @Override
     public List<AccountModel> getAccountList(String path) {
-        List<AccountModel> accounts = new ArrayList<>();
-        
-        if (path.isEmpty()) {
-            path = this.accountCsv;
-        } else {
-            
-        }
-        
-        List<List<String>> lines = CsvHelper.readFromCSV(path);
-        
-        lines.stream().map((line) -> createAccountObject(line)).forEach((account) -> {
-            accounts.add(account);
-        });
-        
-        return accounts;
+        return this.accountRepository.getAccountList(path);
     }
     
     @Override
@@ -68,22 +49,6 @@ public class AccountService implements IAccountService {
             .flatMap(e->e.getValue().stream())
             .collect(Collectors.toList());
     }
-    /**
-     * Create Account object from CSV line
-     * @param metadata
-     * @return AccountModel
-     */
-    private AccountModel createAccountObject(List<String> metadata) {
-        String name = metadata.get(0);
-        
-        float balance = Float.parseFloat(metadata.get(1));
-        
-        String pin = metadata.get(2);
-        
-        String accountNumber = metadata.get(3);
-
-        return new AccountModel(name, accountNumber, pin, balance);
-    }
     
     /**
      * Update Account Data
@@ -91,40 +56,6 @@ public class AccountService implements IAccountService {
      */
     @Override
     public void updateAccountData(List<AccountModel> accounts) {
-        try (FileWriter pw = new FileWriter(this.accountCsv)) {
-            pw.append("Name");
-            pw.append(",");
-            pw.append("Balance");
-            pw.append(",");
-            pw.append("PIN");
-            pw.append(",");
-            pw.append("Account Number");
-            pw.append("\n");
-                
-            Iterator s = accounts.iterator();
-            
-            if (s.hasNext() == false) {
-                System.out.println("Empty");
-            }
-
-            while (s.hasNext()) {
-                AccountModel current = (AccountModel)s.next();
-
-                pw.append(current.getName());
-                pw.append(",");
-                pw.append(Float.toString(current.getBalance()));
-                pw.append(",");
-                pw.append(current.getPin());
-                pw.append(",");
-                pw.append(current.getAccountNumber());
-                pw.append("\n");
-            }
-
-            pw.flush();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
+        this.accountRepository.updateAccountData(accounts);
     }
-    
-    
 }

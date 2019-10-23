@@ -1,8 +1,11 @@
 package com.mitrais.atm.helpers;
 
+import com.mitrais.atm.screens.enums.FileTypeEnum;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -22,14 +25,35 @@ public class CsvHelper {
      * @param fileName
      * @return List of lines
      */
-    public static List<List<String>> readFromCSV(String fileName) {
+    public static List<List<String>> readFromCSV(String fileName, String type) {
         List<List<String>> data = new ArrayList<>();
         int lineCounter = 0;
         String line;
         
-        // create an instance of BufferedReader
-        // using try with resource
-        try(BufferedReader br = new BufferedReader(new FileReader(fileName))){
+        try {
+            File file = new File(fileName);
+
+            if (!file.exists() && type.equals(FileTypeEnum.TRANSACTION.name())){
+                file.createNewFile();
+                FileWriter fw = new FileWriter(file);
+                
+                fw.append("Account Number");
+                fw.append(",");
+                fw.append("Notes");
+                fw.append(",");
+                fw.append("Type");
+                fw.append(",");
+                fw.append("Amount");
+                fw.append(",");
+                fw.append("Create Date");
+                fw.append(",");
+                fw.append("Balance");
+                fw.append("\n");
+                fw.flush();
+            }
+            
+            BufferedReader br = new BufferedReader(new FileReader(fileName));
+                    
             // loop until all lines are read
             while ((line = br.readLine()) != null) {
                 if (lineCounter > 0) {
@@ -61,7 +85,6 @@ public class CsvHelper {
         String propFileName = "config.properties";
         
         try (InputStream input = CsvHelper.class.getClassLoader().getResourceAsStream(propFileName)) {
-
             Properties prop = new Properties();
 
             if (input == null) {
@@ -81,8 +104,8 @@ public class CsvHelper {
     
     /**
      * Set Property Value
-     * @param type
-     * @param value 
+     * @param map
+     * @param propFileName
      */
     public static void setPropValue(Map<String, String> map, String propFileName){
         try (OutputStream output = new FileOutputStream(propFileName)) {
@@ -90,9 +113,9 @@ public class CsvHelper {
             Properties prop = new Properties();
 
             // set the properties value
-            for(Map.Entry<String, String> entry : map.entrySet()) {
+            map.entrySet().stream().forEach((entry) -> {
                 prop.setProperty(entry.getKey(), entry.getValue());
-            }
+            });
             
             // save properties to project root folder
             prop.store(output, null);

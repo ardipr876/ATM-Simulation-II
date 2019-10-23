@@ -67,7 +67,6 @@ public class WithdrawScreen {
                 if (succeed) {
                     balance -= 10;
                     goToScreen = summary(balance, 10);
-                    
                 }
                 break;
             case "2":
