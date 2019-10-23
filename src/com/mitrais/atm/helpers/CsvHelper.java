@@ -43,7 +43,8 @@ public class CsvHelper {
                 lineCounter++;
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            System.out.println("ERROR! File Not Found " + fileName);
+            System.exit(0);
         }
 
         return data;

@@ -52,7 +52,7 @@ public class Main {
                 List<AccountModel> database = accountService.getAccountList("");
                 
                 AccountModel account = loginService.login(database);
-            
+                
                 if(account != null) {
                     transactionScreen.transaction(account, database);
                 }
