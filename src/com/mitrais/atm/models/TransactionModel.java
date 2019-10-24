@@ -1,86 +1,81 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mitrais.atm.models;
 
 import java.util.Date;
 
 /**
- *
+ * Transaction Model
  * @author Ardi_PR876
  */
 public class TransactionModel {
-    private String AccountNumber;
+    private String accountNumber;
     
-    private String Notes;
+    private String notes;
     
-    private String Type;
+    private String type;
     
-    private float Amount;
+    private float amount;
     
-    private Date CreateDate;
+    private Date createDate;
     
-    private float Balance;
+    private float balance;
     
-    public TransactionModel(String AccountNumber, String Notes, String Type, float Amount,
-            Date CreateDate, float Balance){
+    public TransactionModel(String accountNumber, String notes, String type, float amount,
+            Date createDate, float balance){
         
-        this.AccountNumber = AccountNumber;
-        this.Notes = Notes;
-        this.Type = Type;
-        this.Amount = Amount;
-        this.CreateDate = CreateDate;
-        this.Balance = Balance;
+        this.accountNumber = accountNumber;
+        this.notes = notes;
+        this.type = type;
+        this.amount = amount;
+        this.createDate = createDate;
+        this.balance = balance;
     }
 
     public String getAccountNumber() {
-        return AccountNumber;
+        return accountNumber;
     }
 
-    public void setAccountNumber(String AccountNumber) {
-        this.AccountNumber = AccountNumber;
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
     public String getNotes() {
-        return Notes;
+        return notes;
     }
 
-    public void setNotes(String Notes) {
-        this.Notes = Notes;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public String getType() {
-        return Type;
+        return type;
     }
 
-    public void setType(String Type) {
-        this.Type = Type;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public float getAmount() {
-        return Amount;
+        return amount;
     }
 
-    public void setAmount(float Amount) {
-        this.Amount = Amount;
+    public void setAmount(float amount) {
+        this.amount = amount;
     }
 
     public Date getCreateDate() {
-        return CreateDate;
+        return createDate;
     }
 
-    public void setCreateDate(Date CreateDate) {
-        this.CreateDate = CreateDate;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
     public float getBalance() {
-        return Balance;
+        return balance;
     }
 
-    public void setBalance(float Balance) {
-        this.Balance = Balance;
+    public void setBalance(float balance) {
+        this.balance = balance;
     }
     
     

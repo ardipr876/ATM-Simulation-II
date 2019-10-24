@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mitrais.atm.repository;
 
 import com.mitrais.atm.helpers.CsvHelper;
 import com.mitrais.atm.models.TransactionModel;
+import com.mitrais.atm.repository.implement.ITransactionRepository;
 import com.mitrais.atm.screens.enums.FileTypeEnum;
 import com.mitrais.atm.services.TransactionService;
 import java.io.File;
@@ -20,10 +16,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *
+ * Transaction Repository
  * @author Ardi_PR876
  */
-public class TransactionRepository {
+public class TransactionRepository implements ITransactionRepository {
     private static TransactionRepository INSTANCE;
     
     private TransactionRepository() {
@@ -37,6 +33,13 @@ public class TransactionRepository {
         return INSTANCE;
     }
     
+    /**
+     * 
+     * @param accountNumber
+     * @param csvPath
+     * @return 
+     */
+    @Override
     public List<TransactionModel> getTransactionHistory(String accountNumber, String csvPath) {
         List<TransactionModel> transactionHistory = new ArrayList<>();
         
@@ -80,7 +83,9 @@ public class TransactionRepository {
     /**
      * Append Transaction Data to transaction.CSV
      * @param transaction 
+     * @param csvPath 
      */
+    @Override
     public void appendTransactionData(TransactionModel transaction, String csvPath) {
         try {
             File file = new File(csvPath);

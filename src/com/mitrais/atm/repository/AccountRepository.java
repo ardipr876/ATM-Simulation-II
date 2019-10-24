@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mitrais.atm.repository;
 
 import com.mitrais.atm.helpers.CsvHelper;
 import com.mitrais.atm.models.AccountModel;
+import com.mitrais.atm.repository.implement.IAccountRepository;
 import com.mitrais.atm.screens.enums.FileTypeEnum;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,10 +11,10 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- *
+ * Account Repository
  * @author Ardi_PR876
  */
-public class AccountRepository {
+public class AccountRepository implements IAccountRepository {
     private static AccountRepository INSTANCE;
     private final String accountCsv = CsvHelper.getPropValue("directoryCsv") + "\\account.csv";
 
@@ -38,6 +34,7 @@ public class AccountRepository {
      * @param path
      * @return 
      */
+    @Override
     public List<AccountModel> getAccountList(String path) {
         List<AccountModel> accounts = new ArrayList<>();
         
@@ -67,6 +64,11 @@ public class AccountRepository {
         return new AccountModel(name, accountNumber, pin, balance);
     }
     
+    /**
+     * Update Account Data
+     * @param accounts 
+     */
+    @Override
     public void updateAccountData(List<AccountModel> accounts) {
         try (FileWriter pw = new FileWriter(this.accountCsv)) {
             pw.append("Name");
