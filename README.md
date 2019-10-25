@@ -1,7 +1,5 @@
 # ATM-Simulation-II
 
-edit on github
-
 ### Evolving your ATM simulation
 
 We were using a fixed set of accounts and keeping them into memory. As we're evolving our app, we'll need to adjust it for a few requirements
