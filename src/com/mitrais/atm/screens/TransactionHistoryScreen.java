@@ -5,10 +5,10 @@
  */
 package com.mitrais.atm.screens;
 
-import com.mitrais.atm.models.AccountModel;
-import com.mitrais.atm.models.TransactionModel;
+import com.mitrais.atm.models.Account;
+import com.mitrais.atm.models.Transaction;
 import com.mitrais.atm.screens.enums.ScreenEnum;
-import com.mitrais.atm.services.TransactionService;
+import com.mitrais.atm.services.implement.TransactionService;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -38,14 +38,14 @@ public class TransactionHistoryScreen {
         return INSTANCE;
     }
     
-    public String history(AccountModel account){
+    public String history(Account account){
         System.out.println("---------------------------------------------------------");
         System.out.println("Transaction History");
         System.out.println("Name \t\t : " + account.getName());
         System.out.println("Actual Balance \t : $" + account.getBalance());
         System.out.println("");
         
-        List<TransactionModel> transactionHistory;
+        List<Transaction> transactionHistory;
         transactionHistory = transactionService.getTransactionHistory(account.getAccountNumber());
 
         String leftAlignFormat = "| %-35s | %-4s | %-7s | %-12s | %-8s |%n";

@@ -4,7 +4,7 @@ package com.mitrais.atm.models;
  * Account Model
  * @author Ardi_PR876
  */
-public class AccountModel {
+public class Account {
     private String name;
     
     private String pin;
@@ -20,7 +20,7 @@ public class AccountModel {
      * @param pin
      * @param balance 
      */
-    public AccountModel(String name, String accountNumber, String pin, float balance) {
+    public Account(String name, String accountNumber, String pin, float balance) {
         this.name = name;
         
         this.pin = pin;

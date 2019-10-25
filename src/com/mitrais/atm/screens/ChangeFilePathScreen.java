@@ -6,8 +6,8 @@
 package com.mitrais.atm.screens;
 
 import com.mitrais.atm.helpers.CsvHelper;
-import com.mitrais.atm.models.AccountModel;
-import com.mitrais.atm.services.AccountService;
+import com.mitrais.atm.models.Account;
+import com.mitrais.atm.services.implement.AccountService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -55,10 +55,10 @@ public class ChangeFilePathScreen {
         
         String input = scannerOption.nextLine().trim();
         
-        List<AccountModel> listAccount;
+        List<Account> listAccount;
         listAccount = this.accountService.getAccountList(input + "\\account.csv");
         
-        List<AccountModel> duplicates = this.accountService.getDuplicateAccount(listAccount);
+        List<Account> duplicates = this.accountService.getDuplicateAccount(listAccount);
         
         if (!duplicates.isEmpty()) {
             System.out.println("Duplicate!");

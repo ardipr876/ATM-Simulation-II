@@ -1,11 +1,11 @@
 package com.mitrais.atm;
 
 import com.mitrais.atm.helpers.CsvHelper;
-import com.mitrais.atm.models.AccountModel;
+import com.mitrais.atm.models.Account;
 import com.mitrais.atm.screens.ChangeFilePathScreen;
 import com.mitrais.atm.screens.TransactionScreen;
-import com.mitrais.atm.services.AccountService;
-import com.mitrais.atm.services.LoginService;
+import com.mitrais.atm.services.implement.AccountService;
+import com.mitrais.atm.services.implement.LoginService;
 import java.util.List;
 import java.util.Scanner;
 
@@ -45,9 +45,9 @@ public class Main {
                 String accountCsv = CsvHelper.getPropValue("directoryCsv") + "\\account.csv";
                 
                 System.out.println("---------------------------------------------------------");
-                List<AccountModel> database = accountService.getAccountList(accountCsv);
+                List<Account> database = accountService.getAccountList(accountCsv);
                 
-                AccountModel account = loginService.login(database);
+                Account account = loginService.login(database);
                 
                 if(account != null) {
                     transactionScreen.transaction(account, database);

@@ -1,10 +1,10 @@
-package com.mitrais.atm.repository;
+package com.mitrais.atm.repository.implement;
 
 import com.mitrais.atm.helpers.CsvHelper;
-import com.mitrais.atm.models.TransactionModel;
-import com.mitrais.atm.repository.implement.ITransactionRepository;
+import com.mitrais.atm.models.Transaction;
+import com.mitrais.atm.repository.ITransactionRepository;
 import com.mitrais.atm.screens.enums.FileTypeEnum;
-import com.mitrais.atm.services.TransactionService;
+import com.mitrais.atm.services.implement.TransactionService;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -40,8 +40,8 @@ public class TransactionRepository implements ITransactionRepository {
      * @return 
      */
     @Override
-    public List<TransactionModel> getTransactionHistory(String accountNumber, String csvPath) {
-        List<TransactionModel> transactionHistory = new ArrayList<>();
+    public List<Transaction> getTransactionHistory(String accountNumber, String csvPath) {
+        List<Transaction> transactionHistory = new ArrayList<>();
         
         List<List<String>> lines;
         lines = CsvHelper.readFromCSV(csvPath, FileTypeEnum.TRANSACTION.name());
@@ -59,7 +59,7 @@ public class TransactionRepository implements ITransactionRepository {
      * @param metadata
      * @return TransactionModel
      */
-    private TransactionModel createTransactionObject(List<String> metadata) {
+    private Transaction createTransactionObject(List<String> metadata) {
         String accountNumber = metadata.get(0);
         
         String notes = metadata.get(1);
@@ -77,7 +77,7 @@ public class TransactionRepository implements ITransactionRepository {
         
         float balance = Float.parseFloat(metadata.get(5));
         
-        return new TransactionModel(accountNumber, notes, type, amount, createDate, balance);
+        return new Transaction(accountNumber, notes, type, amount, createDate, balance);
     }
     
     /**
@@ -86,7 +86,7 @@ public class TransactionRepository implements ITransactionRepository {
      * @param csvPath 
      */
     @Override
-    public void appendTransactionData(TransactionModel transaction, String csvPath) {
+    public void appendTransactionData(Transaction transaction, String csvPath) {
         try {
             File file = new File(csvPath);
             FileWriter fw;

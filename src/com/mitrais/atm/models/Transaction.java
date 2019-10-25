@@ -6,7 +6,7 @@ import java.util.Date;
  * Transaction Model
  * @author Ardi_PR876
  */
-public class TransactionModel {
+public class Transaction {
     private String accountNumber;
     
     private String notes;
@@ -19,7 +19,7 @@ public class TransactionModel {
     
     private float balance;
     
-    public TransactionModel(String accountNumber, String notes, String type, float amount,
+    public Transaction(String accountNumber, String notes, String type, float amount,
             Date createDate, float balance){
         
         this.accountNumber = accountNumber;

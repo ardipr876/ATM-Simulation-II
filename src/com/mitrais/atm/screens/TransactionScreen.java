@@ -1,6 +1,6 @@
 package com.mitrais.atm.screens;
 
-import com.mitrais.atm.models.AccountModel;
+import com.mitrais.atm.models.Account;
 import com.mitrais.atm.screens.enums.ScreenEnum;
 import java.util.List;
 import java.util.Scanner;
@@ -32,7 +32,7 @@ public class TransactionScreen {
         * @param account AccountModel
         * @param database List of AccountModel
     */
-    public void transaction(AccountModel account, List<AccountModel> database) {
+    public void transaction(Account account, List<Account> database) {
         WithdrawScreen withdrawScreen = WithdrawScreen.getInstance();
         FundTransferScreen fundTransferScreen = FundTransferScreen.getInstance();
         TransactionHistoryScreen historyScreen = TransactionHistoryScreen.getInstance();

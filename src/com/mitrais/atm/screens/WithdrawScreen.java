@@ -1,10 +1,10 @@
 package com.mitrais.atm.screens;
 
 import com.mitrais.atm.helpers.ValidationHelper;
-import com.mitrais.atm.models.AccountModel;
-import com.mitrais.atm.models.ValidationModel;
+import com.mitrais.atm.models.Account;
+import com.mitrais.atm.helpers.ValidationResponse;
 import com.mitrais.atm.screens.enums.ScreenEnum;
-import com.mitrais.atm.services.TransactionService;
+import com.mitrais.atm.services.implement.TransactionService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -39,7 +39,7 @@ public class WithdrawScreen {
      * @param database
      * @return String
      */
-    public String withdraw(AccountModel account, List<AccountModel> database) {
+    public String withdraw(Account account, List<Account> database) {
         // Choice on summary screen, go to Transaction page or Exit (Login page)
         String goToScreen = "";
         
@@ -99,14 +99,14 @@ public class WithdrawScreen {
      * @param database
      * @return 
      */
-    public String otherWithdraw(AccountModel account, List<AccountModel> database) {
+    public String otherWithdraw(Account account, List<Account> database) {
         String goToScreen = ScreenEnum.TRANSACTION.name();
         
         boolean succeed;
         
         float balance = account.getBalance();
         
-        ValidationModel validationModel;
+        ValidationResponse validationModel;
         
         System.out.println("---------------------------------------------------------");
         System.out.println("Other Withdraw (Multiple $10)");

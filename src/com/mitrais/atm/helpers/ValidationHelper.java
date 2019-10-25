@@ -5,8 +5,6 @@
  */
 package com.mitrais.atm.helpers;
 
-import com.mitrais.atm.models.ValidationModel;
-
 /**
  * Validation Helper
  * @author Ardi_PR876
@@ -19,8 +17,8 @@ public class ValidationHelper {
         * @param type String
         * @return ValidationModel
     */
-    public static ValidationModel loginValidation(String value, String type) {
-        ValidationModel validationModel = new ValidationModel();
+    public static ValidationResponse loginValidation(String value, String type) {
+        ValidationResponse validationModel = new ValidationResponse();
         
         if (value.length() == 6) {
             if (!onlyNumberValidation(value)) {
@@ -42,8 +40,8 @@ public class ValidationHelper {
         * @param value String
         * @return ValidationModel
     */
-    public static ValidationModel withdrawValidation(String value) {
-        ValidationModel validationModel = new ValidationModel();
+    public static ValidationResponse withdrawValidation(String value) {
+        ValidationResponse validationModel = new ValidationResponse();
         
         if (!onlyNumberValidation(value)) {
             validationModel.setValid(false);

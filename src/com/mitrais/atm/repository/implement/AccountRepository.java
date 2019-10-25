@@ -1,8 +1,8 @@
-package com.mitrais.atm.repository;
+package com.mitrais.atm.repository.implement;
 
 import com.mitrais.atm.helpers.CsvHelper;
-import com.mitrais.atm.models.AccountModel;
-import com.mitrais.atm.repository.implement.IAccountRepository;
+import com.mitrais.atm.models.Account;
+import com.mitrais.atm.repository.IAccountRepository;
 import com.mitrais.atm.screens.enums.FileTypeEnum;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -35,8 +35,8 @@ public class AccountRepository implements IAccountRepository {
      * @return 
      */
     @Override
-    public List<AccountModel> getAccountList(String path) {
-        List<AccountModel> accounts = new ArrayList<>();
+    public List<Account> getAccountList(String path) {
+        List<Account> accounts = new ArrayList<>();
         
         List<List<String>> lines = CsvHelper.readFromCSV(path, FileTypeEnum.ACCOUNT.name());
         
@@ -52,7 +52,7 @@ public class AccountRepository implements IAccountRepository {
      * @param metadata
      * @return AccountModel
      */
-    private AccountModel createAccountObject(List<String> metadata) {
+    private Account createAccountObject(List<String> metadata) {
         String name = metadata.get(0);
         
         String pin = metadata.get(1);
@@ -61,7 +61,7 @@ public class AccountRepository implements IAccountRepository {
         
         String accountNumber = metadata.get(3);
 
-        return new AccountModel(name, accountNumber, pin, balance);
+        return new Account(name, accountNumber, pin, balance);
     }
     
     /**
@@ -69,7 +69,7 @@ public class AccountRepository implements IAccountRepository {
      * @param accounts 
      */
     @Override
-    public void updateAccountData(List<AccountModel> accounts) {
+    public void updateAccountData(List<Account> accounts) {
         try (FileWriter pw = new FileWriter(this.accountCsv)) {
             pw.append("Name");
             pw.append(",");
@@ -87,7 +87,7 @@ public class AccountRepository implements IAccountRepository {
             }
 
             while (s.hasNext()) {
-                AccountModel current = (AccountModel)s.next();
+                Account current = (Account)s.next();
 
                 pw.append(current.getName());
                 pw.append(",");

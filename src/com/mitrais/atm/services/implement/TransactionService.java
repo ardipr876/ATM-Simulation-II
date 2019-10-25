@@ -1,9 +1,9 @@
-package com.mitrais.atm.services;
+package com.mitrais.atm.services.implement;
 
 import com.mitrais.atm.helpers.CsvHelper;
-import com.mitrais.atm.models.AccountModel;
-import com.mitrais.atm.models.TransactionModel;
-import com.mitrais.atm.repository.TransactionRepository;
+import com.mitrais.atm.models.Account;
+import com.mitrais.atm.models.Transaction;
+import com.mitrais.atm.repository.implement.TransactionRepository;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -45,7 +45,7 @@ public class TransactionService {
      * @param amount
      * @return boolean
     */
-    public boolean deductBalance(AccountModel account, float amount, List<AccountModel> database) {
+    public boolean deductBalance(Account account, float amount, List<Account> database) {
         float balance = account.getBalance();
         
         if (balance < amount) {
@@ -59,7 +59,7 @@ public class TransactionService {
             
             this.accountService.updateAccountData(database);
             
-            TransactionModel transactionModel = new TransactionModel(account.getAccountNumber(), 
+            Transaction transactionModel = new Transaction(account.getAccountNumber(), 
                     "Withdraw", "DB", amount, new Date(), balance);
             
             // add transaction record
@@ -77,8 +77,8 @@ public class TransactionService {
      * @param database
      * @return boolean
     */
-    public boolean fundTransfer(AccountModel account, AccountModel destination, float amount, 
-            List<AccountModel> database) {
+    public boolean fundTransfer(Account account, Account destination, float amount, 
+            List<Account> database) {
         
         float balance = account.getBalance();
         
@@ -93,7 +93,7 @@ public class TransactionService {
             
             account.setBalance(balance);
             
-            TransactionModel transactionModel = new TransactionModel(account.getAccountNumber(), 
+            Transaction transactionModel = new Transaction(account.getAccountNumber(), 
                     "Transfer Fund to " + destination.getName(), "DB", amount, new Date(), 
                     balance);
             
@@ -104,7 +104,7 @@ public class TransactionService {
             
             destination.setBalance(destinationBalance);
             
-            transactionModel = new TransactionModel(destination.getAccountNumber(), 
+            transactionModel = new Transaction(destination.getAccountNumber(), 
                     "Transfer Fund from " + account.getName(), "CR", amount, new Date(), 
                     destinationBalance);
             
@@ -121,27 +121,27 @@ public class TransactionService {
      * @param accountNumber
      * @return List of TransactionModel
      */
-    public List<TransactionModel> getTransactionHistory(String accountNumber) {
-        List<TransactionModel> transactions;
+    public List<Transaction> getTransactionHistory(String accountNumber) {
+        List<Transaction> transactions;
         transactions = this.transactionRepo.getTransactionHistory(accountNumber, this.transactionCsv);
         
         // predicate for filtering data by account number
-        Predicate<TransactionModel> predicate = (data) -> 
+        Predicate<Transaction> predicate = (data) -> 
                 data.getAccountNumber().equals(accountNumber);
         
         // sort transaction history by date descending
-        List<TransactionModel> sortTransactionDateDesc = transactions.stream()
+        List<Transaction> sortTransactionDateDesc = transactions.stream()
                 .filter(predicate)
-                .sorted(Comparator.comparing(TransactionModel::getCreateDate).reversed())
+                .sorted(Comparator.comparing(Transaction::getCreateDate).reversed())
                 .collect(Collectors.toList());
 
         // get top 10 transaction data
-        List<TransactionModel> transaction = sortTransactionDateDesc.stream()
+        return sortTransactionDateDesc.stream()
                 .skip(0).limit(10)
                 .collect(Collectors.toCollection(ArrayList::new));
         
-        return transaction.stream()
-                .sorted(Comparator.comparing(TransactionModel::getCreateDate))
-                .collect(Collectors.toList());
+//        return transaction.stream()
+//                //.sorted(Comparator.comparing(TransactionModel::getCreateDate))
+//                .collect(Collectors.toList());
     }
 }

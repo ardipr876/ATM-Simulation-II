@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mitrais.atm.repository.implement;
+package com.mitrais.atm.repository;
 
-import com.mitrais.atm.models.TransactionModel;
+import com.mitrais.atm.models.Transaction;
 import java.util.List;
 
 /**
@@ -13,6 +13,6 @@ import java.util.List;
  * @author Ardi_PR876
  */
 public interface ITransactionRepository {
-    List<TransactionModel> getTransactionHistory(String accountNumber, String csvPath);
-    void appendTransactionData(TransactionModel transaction, String csvPath);
+    List<Transaction> getTransactionHistory(String accountNumber, String csvPath);
+    void appendTransactionData(Transaction transaction, String csvPath);
 }

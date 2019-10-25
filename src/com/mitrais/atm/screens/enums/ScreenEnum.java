@@ -5,7 +5,18 @@ package com.mitrais.atm.screens.enums;
  * @author Ardi_PR876
  */
 public enum ScreenEnum {
-    TRANSACTION,
-    LOGIN,
-    FUNDTRANSFER
+    TRANSACTION(99),
+    LOGIN(98),
+    FUNDTRANSFER(97);
+    
+    private final int code;
+    
+    ScreenEnum(int code) {
+        this.code = code;
+    }
+
+    public int getCode() {
+        return code;
+    }
+    
 }

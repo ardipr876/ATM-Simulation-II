@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mitrais.atm.repository.implement;
+package com.mitrais.atm.repository;
 
-import com.mitrais.atm.models.AccountModel;
+import com.mitrais.atm.models.Account;
 import java.util.List;
 
 /**
@@ -13,6 +13,6 @@ import java.util.List;
  * @author Ardi_PR876
  */
 public interface IAccountRepository {
-    List<AccountModel> getAccountList(String path);
-    void updateAccountData(List<AccountModel> accounts);
+    List<Account> getAccountList(String path);
+    void updateAccountData(List<Account> accounts);
 }

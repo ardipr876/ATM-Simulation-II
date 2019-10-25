@@ -1,10 +1,10 @@
-package com.mitrais.atm.models;
+package com.mitrais.atm.helpers;
 
 /**
  * Validation Model
  * @author Ardi_PR876
  */
-public class ValidationModel {
+public class ValidationResponse {
     private boolean valid;
     
     private String message;
@@ -12,7 +12,7 @@ public class ValidationModel {
     /**
      * Constructor Validation Model
      */
-    public ValidationModel() {
+    public ValidationResponse() {
         this.valid = false;
         this.message = "";
     }

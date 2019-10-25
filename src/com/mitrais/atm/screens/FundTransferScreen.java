@@ -1,10 +1,10 @@
 package com.mitrais.atm.screens;
 
 import com.mitrais.atm.helpers.ValidationHelper;
-import com.mitrais.atm.models.AccountModel;
-import com.mitrais.atm.models.ValidationModel;
+import com.mitrais.atm.models.Account;
+import com.mitrais.atm.helpers.ValidationResponse;
 import com.mitrais.atm.screens.enums.ScreenEnum;
-import com.mitrais.atm.services.TransactionService;
+import com.mitrais.atm.services.implement.TransactionService;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +40,7 @@ public class FundTransferScreen {
         * @param database List of Account
         * @return goToScreen String
     */
-    public String fundTransfer(AccountModel account, List<AccountModel> database) {
+    public String fundTransfer(Account account, List<Account> database) {
         boolean repeat = false;
         
         String goToScreen = ScreenEnum.TRANSACTION.name();
@@ -61,20 +61,20 @@ public class FundTransferScreen {
             validDestination = ValidationHelper.onlyNumberValidation(destination);
 
             if (validDestination) {
-                Predicate<AccountModel> predicate = p -> p.getAccountNumber().equals(destination);
+                Predicate<Account> predicate = p -> p.getAccountNumber().equals(destination);
                 
-                Optional<AccountModel> destinationAccount = database.stream().filter(predicate).
+                Optional<Account> destinationAccount = database.stream().filter(predicate).
                         findFirst();
 
                 try {
-                    AccountModel destinationAcc = destinationAccount.get();
+                    Account destinationAcc = destinationAccount.get();
                     
-                    ValidationModel amountValidation = amountScreen(account);
+                    ValidationResponse amountValidation = amountScreen(account);
                     
                     if (amountValidation.isValid()) {
                         float amount = Float.parseFloat(amountValidation.getMessage());
                         
-                        ValidationModel confirmationValidation = confirmationScreen(account, 
+                        ValidationResponse confirmationValidation = confirmationScreen(account, 
                                 destinationAcc, amount, database);
                         
                         boolean valid = confirmationValidation.isValid();
@@ -107,8 +107,8 @@ public class FundTransferScreen {
         * @param account
         * @return 
     */
-    private ValidationModel amountScreen(AccountModel account) {
-        ValidationModel validationModel = new ValidationModel();
+    private ValidationResponse amountScreen(Account account) {
+        ValidationResponse validationModel = new ValidationResponse();
         
         System.out.println("---------------------------------------------------------");
         System.out.println("Please enter transfer amount and press enter to continue");
@@ -154,10 +154,10 @@ public class FundTransferScreen {
         * @param amount
         * @return ValidationHelper
     */
-    private ValidationModel confirmationScreen(AccountModel account, AccountModel destinationAcc, 
-            float amount, List<AccountModel> database) {
+    private ValidationResponse confirmationScreen(Account account, Account destinationAcc, 
+            float amount, List<Account> database) {
         
-        ValidationModel validationModel = new ValidationModel();
+        ValidationResponse validationModel = new ValidationResponse();
         
         String destinationNumber = destinationAcc.getAccountNumber();
         
@@ -212,7 +212,7 @@ public class FundTransferScreen {
         * @param refNumber String
         * @return ScreenEnum String
     */
-    private String summary(AccountModel account, AccountModel destination, float amount, 
+    private String summary(Account account, Account destination, float amount, 
             String refNumber) {
         
         String destinationNumber = destination.getAccountNumber();

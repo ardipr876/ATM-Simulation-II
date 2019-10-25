@@ -1,9 +1,9 @@
-package com.mitrais.atm.services;
+package com.mitrais.atm.services.implement;
 
 import com.mitrais.atm.helpers.ValidationHelper;
-import com.mitrais.atm.models.AccountModel;
-import com.mitrais.atm.models.ValidationModel;
-import com.mitrais.atm.services.implement.ILoginService;
+import com.mitrais.atm.models.Account;
+import com.mitrais.atm.helpers.ValidationResponse;
+import com.mitrais.atm.services.ILoginService;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -37,8 +37,8 @@ public class LoginService implements ILoginService {
         * @return account Account
     */
     @Override
-    public AccountModel login(List<AccountModel> database) {
-        AccountModel account = null;
+    public Account login(List<Account> database) {
+        Account account = null;
         
         boolean validAccountNumber;
         
@@ -48,7 +48,7 @@ public class LoginService implements ILoginService {
         
         boolean validPin;
         
-        ValidationModel validationModel;
+        ValidationResponse validationModel;
         
         do {
             System.out.print("Enter Account Number: ");
@@ -84,10 +84,10 @@ public class LoginService implements ILoginService {
         
         String finalPin = pin;
         
-        Predicate<AccountModel> findAccount = p -> 
+        Predicate<Account> findAccount = p -> 
                 p.getAccountNumber().equals(finalAccountNumber) && p.getPin().equals(finalPin);
         
-        Optional<AccountModel> matchingAccount = database.stream().filter(findAccount).findFirst();
+        Optional<Account> matchingAccount = database.stream().filter(findAccount).findFirst();
         
         if (matchingAccount.isPresent()) {
             account = matchingAccount.get();
